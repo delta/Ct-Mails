@@ -1,0 +1,71 @@
+<?php
+$db_host = 'localhost';
+   $db_user = 'root';
+   $db_password = '';
+   $db_name = 'ctmailsV1';
+   //$src='download.jpg';
+   $connect = mysql_connect($db_host, $db_user ,$db_password);
+   $db = mysql_select_db($db_name,$connect);
+   
+   
+   
+   require_once('class.phpmailer.php');
+ date_default_timezone_set('Etc/UTC');
+
+require 'PHPMailerAutoload.php';
+
+
+
+
+
+
+
+   if($_SERVER['REQUEST_METHOD']=='POST')
+   {
+   	$str=explode(' ',$_POST['mailt']);
+   	$query = "SELECT * FROM details ";
+		$resource = mysql_query($query);
+		
+		if($resource && mysql_num_rows($resource) > 0) 
+		{
+			while($result = mysql_fetch_object($resource))
+			
+			   {
+			   	if(in_array($result->Code,$str))
+			   	{
+			   		$content=' <div id="des"><center><h5>NATIONAL INSTITUTE OF TECHNOLOGY,TRICHIRAPALLI-620015</h5><h5>OFFICE OF THE DEAN (ACADEMIC)</h5></center> <FONT SIZE="2PX"> REF:NITT/DA/Cycle Test-I/2014/69 <span style="float:right">Date</span><br><br> To<br><br> <b>'.$result->Prof.'</b> <br>Department of <b>Faculty Department</b><br><br>Sir/Madam,<br><br> Sub:B.Tech-ODD Semester-(2014)-First Cycle Test Question Paper Setting-Reg.<br><br> The schedule of the Second Cycle Test of ODD Semester(2014) for the subject handled by you is given below:<br><br> <table style="width:80%;font-size:15px;" cellspacing="10px"cellpadding="5px"> <tr><td>Branch<span style="float:right">:</span></td><td>'.$result->Subject.'</td></tr> <tr><td>Semester<span style="float:right">:</span></td><td>sem</td></tr> <tr><td>Coarse Code No<span style="float:right">:</span></td><td>'.$result->Code.'</td></tr> <tr><td>Course<span style="float:right">:</span></td><td>'.$result->Subject.'</td></tr> <tr><td>Date<span style="float:right">:</span></td><td>date</td></tr> <tr><td>Time<span style="float:right">:</span></td><td>time</td></tr> <tr><td>Venue<span style="float:right">:</span></td><td>venue</td></tr> </table><br><br> The question paper may be set for 20 marks keeping in view of the model of the assignment given prior to the test. Arrangements for the multiple copies of the question paper for the test may kindly be made well ahead of the scheduled time of the test.The evaluated answer papers may be returned to the students within a week from the date of completion of the test. Cycle test marks should be entered simultaneously in the MIS.<br> <b>You are requested to be invigilator for the test. Kindly do not send M.Tech Students/Ph.D. Scholars to invigilate. Invigilators are requested to be present in the Examination hall atleast 10 minutes before the commencement of examination.</b><br> Thanking You.<br><br><br><br> Deputy Registrar (Student Activities) </div>';
+
+$mail = new PHPMailer();
+$mail->IsSMTP();
+$mail->Mailer = 'smtp';
+$mail->SMTPAuth = true;
+
+$mail->Host = 'smtp.gmail.com'; // "ssl://smtp.gmail.com" didn't worked
+$mail->Port = 587;
+$mail->SMTPSecure = "tls/ssl";
+// or try these settings (worked on XAMPP and WAMP):
+// $mail->Port = 587;
+// $mail->SMTPSecure = 'tls';
+
+$mail->Username = "cprganesh@gmail.com";
+$mail->Password = "13-04-1996g";
+
+$mail->IsHTML(true); // if you are going to send HTML formatted emails
+$mail->SingleTo = true; // if you want to send a same email to multiple users. multiple emails will be sent one-by-one.
+$mail->SMTPSecure = 'tls';
+
+
+$mail->From = "cprganesh@gmail.com";
+$mail->FromName = "Ganyguru";
+
+$mail->addAddress("cprganesh@gmail.com","User 1");
+
+
+$mail->Subject = "Book-kart verification link";
+
+$mail->Body = $content;
+			   	}
+				}
+		}
+   }
+?>
